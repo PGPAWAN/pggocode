@@ -36,23 +36,7 @@ func askForConfirmation(s string) bool {
 	}
 }
 
-func DBConnect(host,dbname,user,pgpass) (db *sql.DB, err error){
-var psqlInfo
-psqlInfo := fmt.Sprintf("host=%s port=%d user=%s " "password=%s dbname=%s ", host, port, user, password, dbname)
-db, err := sql.Open("postgres", psqlInfo)
-if err != nil {
-  panic(err)
-}
-err = db.Ping()
-if err != nil {
-  log.Print("Failed to Connected Database")
-  return err
-}
 
-fmt.Println("Successfully connected!")
-return db
-
-}
 
 // Main function to create extension
 func main(){
@@ -83,24 +67,28 @@ func main(){
        fmt.Println("Details not are not validate.")
        return
      }
-    
-     fmt.Println("Connecting to database.... ")
-     db=dbconnect(host,dbname,user,pgpass)
-     if err !=nil {
-      fmt.Println("Connection broken!!!!!!")
-     }else{
-      rows,err := db.Query('show server_version;')
-      if err !=nil {
-        fmt.Println(err)
-      }
-      for rows.Next(){
-        err =rows.Scan(&version)
-      }
-      fmt.Printf(name)
-  
+     fmt.Println("Connecting to the database")
+     psqlInfo := fmt.Sprintf("host=%s dbname=%s user=%s password=%s port=5432 sslmode=disable", host, dbname, user, pgpass)
+     db, err := sql.Open("Postgres",psqlInfo)
+     if err != nil {
+      panic (err)
      }
-
-     
+     err = db.Ping()
+     if err != nil {
+      fmt.Println("Failed to Connect Database")
+     }
+     fmt.Println("Connected Sucessfully !!!!")
+     //let's prepare the query to be excuete
+     query, err := db.Prepare(fmt.Sprintf(`CREATE EXTENSION %s;`),extname)
+     if err != nil {
+      fmt.Println(err)
+     }
+     _, err = query.Exec()
+     if err != nil {
+      fmt.Println(err)
+     }else{
+      fmt.Printf("Extension %s Created Successfully...!!!! ")
+     }
 
 }
 
