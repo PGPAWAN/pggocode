@@ -70,25 +70,25 @@ func main(){
      fmt.Println("Connecting to the database")
      psqlInfo := fmt.Sprintf("host=%s dbname=%s user=%s password=%s port=5432 sslmode=disable", host, dbname, user, pgpass)
      db, err := sql.Open("postgres",psqlInfo)
-     if err != nil {
-      panic (err)
-     }
+      if err != nil {
+        panic (err)
+      }
      err = db.Ping()
-     if err != nil {
-      fmt.Println("Failed to Connect Database")
-     }
+      if err != nil {
+        fmt.Println("Failed to Connect Database")
+      }
      fmt.Println("Connected Sucessfully !!!!")
      //let's prepare the query to be excuete
      query, err := db.Prepare(fmt.Sprintf(`CREATE EXTENSION %s;`,extname))
-     if err != nil {
-      fmt.Println(err)
-     }
+      if err != nil {
+        log.Println(err)
+      }
      _, err = query.Exec()
-     if err != nil {
-      fmt.Println(err)
-     }else{
-      fmt.Printf("Extension %s Created Successfully...!!!! ")
-     }
+      if err != nil {
+        fmt.Println(err)
+      }else{
+        fmt.Printf("Extension %s Created Successfully...!!!! ")
+      }
 
 }
 
