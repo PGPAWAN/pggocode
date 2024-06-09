@@ -69,7 +69,7 @@ func main(){
      }
      fmt.Println("Connecting to the database")
      psqlInfo := fmt.Sprintf("host=%s dbname=%s user=%s password=%s port=5432 sslmode=disable", host, dbname, user, pgpass)
-     db, err := sql.Open("Postgres",psqlInfo)
+     db, err := sql.Open("postgres",psqlInfo)
      if err != nil {
       panic (err)
      }
@@ -79,7 +79,7 @@ func main(){
      }
      fmt.Println("Connected Sucessfully !!!!")
      //let's prepare the query to be excuete
-     query, err := db.Prepare(fmt.Sprintf(`CREATE EXTENSION %s;`),extname)
+     query, err := db.Prepare(fmt.Sprintf(`CREATE EXTENSION %s;`,extname))
      if err != nil {
       fmt.Println(err)
      }
